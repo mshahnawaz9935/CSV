@@ -164,19 +164,16 @@ class AccountsContainer extends Component {
                 <Card.Title style={titleStyle} onClick={this.handleFiles}>Accounts</Card.Title>
                 <Card.Text>
                 <DataGrid
-                     dataSource={csvData}
+                     dataSource={this.state.users}
                      selection={{ mode: 'single' }}
                      showBorders={true}
                      hoverStateEnabled={true}
                   //   keyExpr="ID"
                      onSelectionChanged={this.onSelectionChanged}
                     >
-                         <Column dataField="Prefix" caption="Title" width={70} />
-                        <Column dataField="firstname" />
-                        <Column dataField="LastName" />
-                        <Column dataField="Position" width={180} />
-                        <Column dataField="BirthDate" dataType="date" />
-                        <Column dataField="HireDate" dataType="date" />
+                         <Column dataField="account_id" caption="ID" width={70} />
+                        <Column dataField="status" />
+                        <Column dataField="created_on" dataType="date" />
                     <Paging defaultPageSize={10} />
                     <Pager
                       showPageSizeSelector={true}
