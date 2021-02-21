@@ -171,9 +171,9 @@ class AccountsContainer extends Component {
                   //   keyExpr="ID"
                      onSelectionChanged={this.onSelectionChanged}
                     >
-                         <Column dataField="account_id" caption="ID" width={70} />
+                         {/* <Column dataField="account_id" caption="Account ID" width={70} />
                         <Column dataField="status" />
-                        <Column dataField="created_on" dataType="date" />
+                        <Column dataField="created_on" dataType="date" /> */}
                     <Paging defaultPageSize={10} />
                     <Pager
                       showPageSizeSelector={true}
@@ -181,7 +181,7 @@ class AccountsContainer extends Component {
                       showInfo={true} />
                 </DataGrid>
 
-                <CSVLink filename={"my-file.csv"} data={csvData} >Download me</CSVLink>
+                <CSVLink filename={"my-file.csv"} data={this.state.users} >Download me</CSVLink>
                
                 {/* <CSVDownload data={csvData} target="_blank" /> */}
                                 </Card.Text>
