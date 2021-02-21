@@ -54,7 +54,7 @@ class AccountsContainer extends Component {
             .then(data => {
                 console.log(data);
                   if(data!=null)
-                  this.setState({ users : data.results  })
+                  this.setState({ apiData : data.results  })
             })
              .catch((error) => {
                   this.setState({ errors : error + ' Error Occured ' })
@@ -64,12 +64,13 @@ class AccountsContainer extends Component {
 
     state = { //state is by default an object
          users: [
-           { id: 1, name: 'Wasif', age: 21, email: 'wasif@email.com' },
-           { id: 2, name: 'Ali', age: 19, email: 'ali@email.com' },
-           { id: 3, name: 'Saad', age: 16, email: 'saad@email.com' },
-           { id: 4, name: 'Asad', age: 25, email: 'asad@email.com' }
+        //    { id: 1, name: 'Wasif', age: 21, email: 'wasif@email.com' },
+        //    { id: 2, name: 'Ali', age: 19, email: 'ali@email.com' },
+        //    { id: 3, name: 'Saad', age: 16, email: 'saad@email.com' },
+        //    { id: 4, name: 'Asad', age: 25, email: 'asad@email.com' }
         ],
         lines : [],
+        showEmployeeInfo: false,
        
      }
 
@@ -116,7 +117,7 @@ class AccountsContainer extends Component {
         .fromString(csvData)
         .then((jsonObj)=>{
             console.log(jsonObj);
-            this.setState({users : jsonObj});
+            this.setState({users : jsonObj ,  showEmployeeInfo: !!jsonObj});
         });
       
 
@@ -161,10 +162,10 @@ class AccountsContainer extends Component {
             <div class="col-8">
             <Card style={{borderRadius:'15px',height:'80vh' }}>
             <Card.Body>
-                <Card.Title style={titleStyle} onClick={this.handleFiles}>Accounts</Card.Title>
+                <Card.Title style={titleStyle} onClick={this.handleFiles}>Accounts API</Card.Title>
                 <Card.Text>
                 <DataGrid
-                     dataSource={this.state.users}
+                     dataSource={this.state.apiData}
                      selection={{ mode: 'single' }}
                      showBorders={true}
                      hoverStateEnabled={true}
@@ -190,22 +191,26 @@ class AccountsContainer extends Component {
             </Card>
             </div>
             <div class="col-4">
-            <Card style={{borderRadius:'15px',height:'80vh' }}>
+            <Card style={{borderRadius:'15px',height:'80vh',overflowY:'scroll' }}>
             <Card.Body>
-                <Card.Title className="card_title">Details</Card.Title>
+                <Card.Title className="card_title">Details from CSV</Card.Title>
+             
                 <Card.Text>
                     <input type="file" onChange={ this.handleFiles }
                 accept=".csv" 
             />
-         
+      
          <div>
-            <p id='title'>React Dynamic Table</p>
-            <table id='students'>
+         <br/>
+            <p id='title'>Read File</p>
+           {
+            this.state.showEmployeeInfo && <table id='students'>
                <tbody>
                   <tr>{this.renderTableHeader()}</tr>
                   {this.renderTableData()}
                </tbody>
             </table>
+            }
          </div>
                 
                 </Card.Text>
