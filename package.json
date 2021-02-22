@@ -7,7 +7,8 @@
     "node": "10.15.0"
   },
   "scripts": {
-	"start": "react-scripts start",
+    "start": "npm run build && node server.js",
+	"start-client": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
