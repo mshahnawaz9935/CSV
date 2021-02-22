@@ -49,7 +49,7 @@ class AccountsContainer extends Component {
 
     componentDidMount() {
         //  GET request using fetch
-        fetch('http://localhost:8081/data')
+        fetch('/data')
             .then(response =>  { 
             
                 if(response.status == 200)
