@@ -25,8 +25,8 @@ app.use((req, res, next) => {
   res.sendfile(path.join("build", "index.html"));
 });
 
-
-var server = app.listen(8081, function () {
+const PORT = process.env.PORT || 80;
+var server = app.listen(PORT, function () {
    var host = server.address().address
    var port = server.address().port
    console.log("Example app listening at http://%s:%s", host, port)
