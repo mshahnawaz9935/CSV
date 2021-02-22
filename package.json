@@ -2,27 +2,35 @@
   "name": "csv",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "npm": "7.5.2",
+    "node": "10.15.0"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.6.3",
     "bootstrap": "^4.6.0",
+    "cors": "^2.8.5",
     "csvtojson": "^2.0.10",
     "devextreme": "^20.2.5",
     "devextreme-react": "^20.2.5",
+    "express": "^4.17.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.3",
     "react-csv": "^2.0.3",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.2",
+    "require": "^2.4.20",
     "web-vitals": "^1.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start-client": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start" : "npm run build && node server.js"
   },
   "eslintConfig": {
     "extends": [

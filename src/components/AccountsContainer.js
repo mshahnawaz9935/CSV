@@ -27,24 +27,37 @@ const csvData =[
     ['John', 'Doe' , 'john.doe@xyz.com'] ,
     ['Jane', 'Doe' , 'jane.doe@xyz.com']
   ];
-
    
-
 class AccountsContainer extends Component {
 
-    constructor(props) {
-        super(props);
+    state = { //state is by default an object
+        users: [
+       //    { id: 1, name: 'Wasif', age: 21, email: 'wasif@email.com' },
+       //    { id: 2, name: 'Ali', age: 19, email: 'ali@email.com' },
+       //    { id: 3, name: 'Saad', age: 16, email: 'saad@email.com' },
+       //    { id: 4, name: 'Asad', age: 25, email: 'asad@email.com' }
+       ],
+       lines : [],
+       titleCard : 'Accounts API',
+       showCsvData: false,
+       merge : false
     }
+
+    constructor(props) {
+     
+        super(props);
+        this.merge= this.merge.bind(this);
+        this.reset= this.reset.bind(this);
+     
+    }
+
     componentDidMount() {
         //  GET request using fetch
         fetch('http://localhost:8081/data')
             .then(response =>  { 
             
                 if(response.status == 200)
-                {
-                    return response.json(); 
-                }
-                
+                    return response.json();         
                 else 
                 {
                   console.log(response.status);
@@ -60,27 +73,12 @@ class AccountsContainer extends Component {
                   this.setState({ errors : error + ' Error Occured ' })
             })
     }
-    
 
-    state = { //state is by default an object
-         users: [
-        //    { id: 1, name: 'Wasif', age: 21, email: 'wasif@email.com' },
-        //    { id: 2, name: 'Ali', age: 19, email: 'ali@email.com' },
-        //    { id: 3, name: 'Saad', age: 16, email: 'saad@email.com' },
-        //    { id: 4, name: 'Asad', age: 25, email: 'asad@email.com' }
-        ],
-        lines : [],
-        showEmployeeInfo: false,
-       
-     }
-
-    
 
  
     handleFiles = (files) => {
 
         console.log('in handle',files);
-     
         // Check for the various File API support.
         if (window.FileReader) {
             // FileReader are supported.
@@ -88,14 +86,11 @@ class AccountsContainer extends Component {
         }
     }
 
-  
-
     getAsText(fileToRead) {
         var reader = new FileReader();
         // Read file into memory as UTF-8   
         
         fileToRead = document.querySelector('input').files[0];
-
         reader.readAsText(fileToRead);
  
         // Handle errors load
@@ -107,9 +102,7 @@ class AccountsContainer extends Component {
     fileReadingFinished(event) {
         var csvData = event.target.result;
         console.log(csvData);
-     
-        this.convertCSVToJson(csvData);
-      
+        this.convertCSVToJson(csvData); 
     }
 
     convertCSVToJson(csvData) {
@@ -117,13 +110,10 @@ class AccountsContainer extends Component {
         .fromString(csvData)
         .then((jsonObj)=>{
             console.log(jsonObj);
-            this.setState({users : jsonObj ,  showEmployeeInfo: !!jsonObj});
+            this.setState({users : jsonObj ,  showCsvData: !!jsonObj});
         });
-      
-
     }
 
-    
     errorHandler(event) {
         if (event.target.error.name === "NotReadableError") {
             alert("Cannot read file!");
@@ -137,22 +127,62 @@ class AccountsContainer extends Component {
         })
      }
 
-    
-
     renderTableData() {
    
         let headers = Object.keys(this.state.users[0]);
    
         return this.state.users.map((row, index) => {
-            console.log(row);
+        
 
            return <tr key={index}><RenderRow key={index} data={row} keys={headers}/></tr>
          })
       }
+
+      reset()
+      {
+
+        this.setState({ users: [
+            ],
+            lines : [],
+            titleCard : 'Accounts API',
+            showCsvData: false,
+            merge : false });
+            this.componentDidMount();
+            alert('File Downloading');
+
+      }
+
+      merge()
+      {
+          if (this.state.showCsvData) {
+
+            console.log(this.state.users , this.state.apiData);
+
+            const csvData1 =  [...this.state.users];
+         
+            for(var i= 0 ;i< csvData1.length ; i++)
+            {
+                var account = csvData1[i];
+                for(var j=0;j < this.state.apiData.length;j++)
+                {
+                    if(account["Account ID"] == this.state.apiData[j].account_id)
+                    {
+                        let clone = Object.assign({}, account);
+                         clone.status = this.state.apiData[j].status;
+                         csvData1[i] = clone;
+                        break;
+                    }
+                }
+            }
+            console.log(csvData1);
+          
+            this.setState({titleCard : 'Data merged from Csv' , apiData : csvData1 , merge : true });
+            console.log(this.state);
+
+          }
+           else alert('No Csv uploaded');
+      }
      
-
-   
-
 
   render() {
     return (
@@ -162,7 +192,7 @@ class AccountsContainer extends Component {
             <div class="col-8">
             <Card style={{borderRadius:'15px',height:'80vh' }}>
             <Card.Body>
-                <Card.Title style={titleStyle} onClick={this.handleFiles}>Accounts API</Card.Title>
+                <Card.Title style={titleStyle} onClick={this.handleFiles}>{this.state.titleCard}</Card.Title>
                 <Card.Text>
                 <DataGrid
                      dataSource={this.state.apiData}
@@ -181,10 +211,18 @@ class AccountsContainer extends Component {
                       allowedPageSizes={[5, 10, 20]}
                       showInfo={true} />
                 </DataGrid>
-
-                <CSVLink filename={"my-file.csv"} data={this.state.users} >Download me</CSVLink>
+                {  !this.state.merge &&
+                    <button onClick = {this.merge} >Merge Api data and the CSV file</button>
+                }
+             
                
                 {/* <CSVDownload data={csvData} target="_blank" /> */}
+
+                {
+                    this.state.showCsvData && 
+                     <CSVLink filename={"my-file.csv"} data={this.state.users}  onClick = {this.reset} >Download CSV</CSVLink>
+                }
+                
                                 </Card.Text>
                
             </Card.Body>
@@ -199,12 +237,11 @@ class AccountsContainer extends Component {
                     <input type="file" onChange={ this.handleFiles }
                 accept=".csv" 
             />
-      
          <div>
          <br/>
             <p id='title'>Read File</p>
            {
-            this.state.showEmployeeInfo && <table id='students'>
+            this.state.showCsvData && <table id='students'>
                <tbody>
                   <tr>{this.renderTableHeader()}</tr>
                   {this.renderTableData()}
