@@ -25,7 +25,7 @@ app.use((req, res, next) => {
   res.sendfile(path.join("build", "index.html"));
 });
 
-const PORT = process.env.PORT || 80;
+const PORT = process.env.PORT || 8081;
 var server = app.listen(PORT, function () {
    var host = server.address().address
    var port = server.address().port
