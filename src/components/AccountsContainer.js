@@ -1,19 +1,13 @@
 import React, { Component } from 'react';
-import DataGrid, { Column, Pager, Paging } from 'devextreme-react/data-grid';
-import { employees } from '../data.js';
-import { Card , CardGroup ,Button  } from 'react-bootstrap';
-import {CSVLink, CSVDownload} from 'react-csv';
+import DataGrid, { Pager, Paging } from 'devextreme-react/data-grid';
+import { Card  } from 'react-bootstrap';
+import {CSVLink} from 'react-csv';
 import * as csv from 'csvtojson';
 
 var titleStyle= {
-    height: '41px',
-    fontSize: '30px',
-    fontWeight: '700',
-    fontStyle: 'normal',
-    fontStretch: 'normal',
-    lineHeight: 'normal',
-    letterSpacing: '1.5px',
-    color:'#0055a5',
+    height: '41px',   fontSize: '30px',    fontWeight: '700',
+    fontStyle: 'normal',    fontStretch: 'normal',    lineHeight: 'normal',
+    letterSpacing: '1.5px',    color:'#0055a5',
 };
 
 const RenderRow = (props) =>{
@@ -30,13 +24,9 @@ const csvData =[
    
 class AccountsContainer extends Component {
 
-    state = { //state is by default an object
-        users: [
-       ],
-       lines : [],
-       titleCard : 'Accounts API',
-       showCsvData: false,
-       merge : false
+    state = { 
+        users: [], lines : [],  titleCard : 'Accounts API',
+       showCsvData: false,  merge : false
     }
 
     constructor(props) {
@@ -44,21 +34,16 @@ class AccountsContainer extends Component {
         super(props);
         this.merge= this.merge.bind(this);
         this.reset= this.reset.bind(this);
-     
     }
 
     componentDidMount() {
         //  GET request using fetch
-        fetch('/data')
+        fetch('http://localhost:8081/data')
             .then(response =>  { 
             
                 if(response.status == 200)
                     return response.json();         
-                else 
-                {
-                  console.log(response.status);
-                  throw new Error(response.status);
-                }
+                else  throw new Error(response.status);
              })
             .then(data => {
                 console.log(data);
@@ -70,11 +55,8 @@ class AccountsContainer extends Component {
             })
     }
 
-
- 
     handleFiles = (files) => {
 
-        console.log('in handle',files);
         // Check for the various File API support.
         if (window.FileReader) {
             // FileReader are supported.
@@ -126,37 +108,28 @@ class AccountsContainer extends Component {
     renderTableData() {
    
         let headers = Object.keys(this.state.users[0]);
-   
         return this.state.users.map((row, index) => {
-        
-
            return <tr key={index}><RenderRow key={index} data={row} keys={headers}/></tr>
          })
       }
 
       reset()
       {
-
-        this.setState({ users: [
-            ],
-            lines : [],
-            titleCard : 'Accounts API',
-            showCsvData: false,
-            merge : false });
+        this.setState({ users: [], lines : [], titleCard : 'Accounts API',
+            showCsvData: false, merge : false });
             this.componentDidMount();
             alert('File Downloading');
+            document.getElementById('fileContainer').value='';
 
       }
 
       merge()
       {
           if (this.state.showCsvData) {
-
             console.log(this.state.users , this.state.apiData);
-
             const csvData1 =  [...this.state.users];
          
-            for(var i= 0 ;i< csvData1.length ; i++)
+            for(var i= 0 ; i < csvData1.length ; i++)
             {
                 var account = csvData1[i];
                 for(var j=0;j < this.state.apiData.length;j++)
@@ -179,12 +152,11 @@ class AccountsContainer extends Component {
            else alert('No Csv uploaded');
       }
      
-
   render() {
     return (
       <div className="AccountsContainer" style={{ backgroundColor:'#ebf0f4',height:'98vh'}}>
       
-      <div class="row" style={{ padding: '2%'  }}>
+      <div class="row" style={{ padding: '2%'}}>
             <div class="col-8">
             <Card style={{borderRadius:'15px',height:'80vh' }}>
             <Card.Body>
@@ -198,9 +170,6 @@ class AccountsContainer extends Component {
                   //   keyExpr="ID"
                      onSelectionChanged={this.onSelectionChanged}
                     >
-                         {/* <Column dataField="account_id" caption="Account ID" width={70} />
-                        <Column dataField="status" />
-                        <Column dataField="created_on" dataType="date" /> */}
                     <Paging defaultPageSize={10} />
                     <Pager
                       showPageSizeSelector={true}
@@ -210,17 +179,12 @@ class AccountsContainer extends Component {
                 {  !this.state.merge &&
                     <button onClick = {this.merge} >Merge Api data and the CSV file</button>
                 }
-             
-               
-                {/* <CSVDownload data={csvData} target="_blank" /> */}
-
+     
                 {
-                    this.state.showCsvData && 
-                     <CSVLink filename={"my-file.csv"} data={this.state.users}  onClick = {this.reset} >Download CSV</CSVLink>
+                    this.state.merge && 
+                     <CSVLink filename={"my-file.csv"} data={this.state.apiData}  onClick = {this.reset} >Download CSV</CSVLink>
                 }
-                
                                 </Card.Text>
-               
             </Card.Body>
             </Card>
             </div>
@@ -230,7 +194,7 @@ class AccountsContainer extends Component {
                 <Card.Title className="card_title">Details from CSV</Card.Title>
              
                 <Card.Text>
-                    <input type="file" onChange={ this.handleFiles }
+                    <input id="fileContainer" type="file" onChange={ this.handleFiles }
                 accept=".csv" 
             />
          <div>
@@ -244,19 +208,14 @@ class AccountsContainer extends Component {
                </tbody>
             </table>
             }
-         </div>
-                
+         </div>      
                 </Card.Text>
-              
             </Card.Body>
             </Card>
             </div>
         </div>
-      
       </div>
     );
   }
 }
-
-
 export default AccountsContainer;
