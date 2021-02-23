@@ -1,6 +1,5 @@
 
 import NavMenu from './components/NavMenu';
-//import FirstContainer from './components/FirstContainer';
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'devextreme/dist/css/dx.common.css';

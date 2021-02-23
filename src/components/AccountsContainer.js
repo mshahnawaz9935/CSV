@@ -38,7 +38,7 @@ class AccountsContainer extends Component {
 
     componentDidMount() {
         //  GET request using fetch
-        fetch('http://localhost:8081/data')
+        fetch('/data')
             .then(response =>  { 
             
                 if(response.status == 200)
@@ -51,7 +51,7 @@ class AccountsContainer extends Component {
                   this.setState({ apiData : data.results  })
             })
              .catch((error) => {
-                  this.setState({ errors : error + ' Error Occured ' })
+                  this.setState({ errors : error + ' Error Occured from API ' })
             })
     }
 
@@ -176,13 +176,19 @@ class AccountsContainer extends Component {
                       allowedPageSizes={[5, 10, 20]}
                       showInfo={true} />
                 </DataGrid>
-                {  !this.state.merge &&
+                <div class="row" style={{paddingTop:'7%'}}>
+                          <div class="col-12" style={{textAlign : 'left'}}>
+                              <span class="card_title" style={{fontSize:'18px',height:'30px'}}><span style={{borderBottom: '2px solid #dfdd07',paddingBottom:'5px'}}>{this.state.errors}</span>
+                              </span>
+                                </div>
+              </div>
+                { !this.state.errors && !this.state.merge &&
                     <button onClick = {this.merge} >Merge Api data and the CSV file</button>
                 }
      
                 {
                     this.state.merge && 
-                     <CSVLink filename={"my-file.csv"} data={this.state.apiData}  onClick = {this.reset} >Download CSV</CSVLink>
+                     <CSVLink filename={"accounts.csv"} data={this.state.apiData}  onClick = {this.reset} >Download CSV</CSVLink>
                 }
                                 </Card.Text>
             </Card.Body>

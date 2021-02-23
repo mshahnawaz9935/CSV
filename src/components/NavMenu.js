@@ -10,7 +10,6 @@ function NavMenu() {
             <Navbar.Brand href="#">WP Engine</Navbar.Brand>
             <Nav className="mr-auto">
               <Nav.Link href="/">Accounts</Nav.Link>
-              <Nav.Link href="#">Dashbard</Nav.Link>
               <Nav.Link href="#">Users</Nav.Link>
             </Nav>
           
